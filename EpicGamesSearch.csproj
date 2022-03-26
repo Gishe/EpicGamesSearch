@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+      <UserSecretsId>185a9508-e81f-4556-94c9-a76a85374624</UserSecretsId>
+  </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="ExcelMapper" Version="5.2.383" />
+      <PackageReference Include="Google.Apis" Version="1.56.0" />
+      <PackageReference Include="Google.Apis.CustomSearchAPI.v1" Version="1.56.0.2455" />
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0-preview.2.22152.2" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0-preview.2.22152.2" />
+    </ItemGroup>
+
+</Project>
