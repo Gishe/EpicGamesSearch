@@ -14,6 +14,7 @@
       <PackageReference Include="Google.Apis.CustomSearchAPI.v1" Version="1.56.0.2455" />
       <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0-preview.2.22152.2" />
       <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0-preview.2.22152.2" />
+      <PackageReference Include="Npoi.Mapper" Version="3.5.1" />
     </ItemGroup>
 
 </Project>

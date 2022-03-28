@@ -3,13 +3,14 @@
 
 using System.Text.RegularExpressions;
 using EpicGamesSearch;
-using Ganss.Excel;
+using EpicGamesSearch.Qualifiers;
 using Google.Apis.CustomSearchAPI.v1.Data;
+using Npoi.Mapper;
 using static System.Console;
 
 
-const string query = "Elden Ring sales";
 const string excelFile = "TopSellingGames.xlsx";
+const string excelOut = "Output.xlsx";
 
 var searchClient = new BingSearch();
 
@@ -19,20 +20,28 @@ var searchClient = new BingSearch();
 var folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
 var filePath = Path.Combine(folder, excelFile);
+var outPath = Path.Combine(folder, excelOut);
 
-var excel = new ExcelMapper();
-excel.NormalizeUsing(n => Regex.Replace(n, "\\s", ""));
-var gameRows = (await excel.FetchAsync<PrimaryGameRow>(filePath, 2)).ToList();
+var excel = new Mapper(filePath);
+
+var gameRows = excel.Take<PrimaryGameRow>(2).ToList();
 var allResults = new List<SearchResult>();
-for(int i = 0; i < 10; i++)
+
+var regexQualifier = new RegexQualifier(@"[,\d]{3,}");
+
+var engineQualifier = new ListQualifier(GameEngines.Values);
+    
+
+for(int i = 0; i < 20; i++)
 {
     var game = gameRows[i];
-    WriteLine($"Starting {game.GameName}");
+    WriteLine($"Starting {game.Value.GameName}");
 
-    var results = searchClient.Search($"{game.GameName} Sales", new Regex(@"[,\d]{3,}"));
-    //allResults.AddRange(results);
-    allResults.Add(new SearchResult(){name = game.GameName});
+    var results = searchClient.Search(game.Value.GameName, $"{game.Value.GameName} Game Engine", engineQualifier.Qualifier);
+    allResults.AddRange(results);
+    //allResults.Add(new SearchResult(){name = game.Value.GameName});
     await Task.Delay(400); // Using the slow version for testing
 }
 
-await excel.SaveAsync(filePath, allResults, 3);
+excel.Put(allResults, "EngineSearch", true);
+excel.Save(outPath);
