@@ -9,8 +9,20 @@ using Npoi.Mapper;
 using static System.Console;
 
 
-const string excelFile = "TopSellingGames.xlsx";
+const string excelFile = "InputV1.xlsx";
 const string excelOut = "Output.xlsx";
+const string mainSheetName = "Todays Top Played Games";
+
+
+// var steamSpy = new SteamSpy();
+//
+// var steamSpyResults = await steamSpy.GetData();
+//
+// foreach (var result in steamSpyResults)
+// {
+//     Console.WriteLine(result);
+// }
+
 
 var searchClient = new BingSearch();
 
@@ -23,25 +35,39 @@ var filePath = Path.Combine(folder, excelFile);
 var outPath = Path.Combine(folder, excelOut);
 
 var excel = new Mapper(filePath);
+excel.TrackObjects = true;
 
-var gameRows = excel.Take<PrimaryGameRow>(2).ToList();
-var allResults = new List<SearchResult>();
-
-var regexQualifier = new RegexQualifier(@"[,\d]{3,}");
-
-var engineQualifier = new ListQualifier(GameEngines.Values);
-    
-
-for(int i = 0; i < 20; i++)
+var gameRows = excel.Take<PrimaryGameRow>(mainSheetName).ToList();
+var steamApi = new SteamApi();
+foreach (var rowInfo in gameRows)
 {
-    var game = gameRows[i];
-    WriteLine($"Starting {game.Value.GameName}");
-
-    var results = searchClient.Search(game.Value.GameName, $"{game.Value.GameName} Game Engine", engineQualifier.Qualifier);
-    allResults.AddRange(results);
-    //allResults.Add(new SearchResult(){name = game.Value.GameName});
-    await Task.Delay(400); // Using the slow version for testing
+    rowInfo.Value.AppId = steamApi.FindAppId(rowInfo.Value.GameName);
 }
 
-excel.Put(allResults, "EngineSearch", true);
 excel.Save(outPath);
+
+async Task HandleSearchResults(List<RowInfo<PrimaryGameRow>> rows)
+{
+    var allResults = new List<SearchResult>();
+
+    var regexQualifier = new RegexQualifier(@"[,\d]{3,}");
+
+    var engineQualifier = new ListQualifier(GameEngines.Values);
+    
+
+    for(int i = 0; i < 20; i++)
+    {
+        var game = gameRows[i];
+        WriteLine($"Starting {game.Value.GameName}");
+
+        var results = searchClient.Search(game.Value.GameName, $"{game.Value.GameName} Game Engine", engineQualifier.Qualifier);
+        allResults.AddRange(results);
+        //allResults.Add(new SearchResult(){name = game.Value.GameName});
+        await Task.Delay(400); // Using the slow version for testing
+    }
+
+    excel.Put(allResults, "EngineSearch", true);
+    excel.Save(outPath);
+}
+
+

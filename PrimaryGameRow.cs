@@ -2,6 +2,7 @@
 
 public class PrimaryGameRow
 {
+    public int AppId { get; set; }
     public int Ranking { get; set; }
     public string? GameName { get; set; }
     public int CurrentPlayers { get; set; }
