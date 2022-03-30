@@ -17,4 +17,11 @@
       <PackageReference Include="Npoi.Mapper" Version="3.5.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Steam API Data.txt" />
+      <Content Include="SteamAPIData.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>

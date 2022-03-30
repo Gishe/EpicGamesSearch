@@ -23,7 +23,7 @@ const string mainSheetName = "Todays Top Played Games";
 //     Console.WriteLine(result);
 // }
 
-
+var steamApi = await SteamApi.Create();
 var searchClient = new BingSearch();
 
 //var successful = searchClient.Search(query, new Regex(@"[,\d]{3,}"));
@@ -38,7 +38,7 @@ var excel = new Mapper(filePath);
 excel.TrackObjects = true;
 
 var gameRows = excel.Take<PrimaryGameRow>(mainSheetName).ToList();
-var steamApi = new SteamApi();
+
 foreach (var rowInfo in gameRows)
 {
     rowInfo.Value.AppId = steamApi.FindAppId(rowInfo.Value.GameName);
