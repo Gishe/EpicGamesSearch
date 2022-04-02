@@ -8,8 +8,12 @@ public class PrimaryGameRow
     public int CurrentPlayers { get; set; }
     public int PeakInLast24Hours { get; set; }
     public int PeakPlayers { get; set; }
-    public int Price { get; set; }
+    public double? InitialPrice { get; set; }
+    public double? Price { get; set; }
     public string? Engine { get; set; }
-    public int Sales { get; set; }
-    public int RevenueReports { get; set; }
+    public bool? IndyGame { get; set; }
+    public string LowOwners { get; set; }
+    public string HighOwners { get; set; }
+    public int? RevenueReports { get; set; }
+    
 }
